@@ -367,7 +367,8 @@ cfg_rt! {
         F: Future + 'static,
         F::Output: 'static,
     {
-        if cfg!(debug_assertions) && std::mem::size_of::<F>() > BOX_FUTURE_THRESHOLD {
+        if std::mem::size_of::<F>() > BOX_FUTURE_THRESHOLD {
+        panic!("Future too large: {}", std::mem::size_of::<F>());
             spawn_local_inner(Box::pin(future), None)
         } else {
             spawn_local_inner(future, None)

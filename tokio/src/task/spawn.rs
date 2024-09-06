@@ -169,7 +169,8 @@ cfg_rt! {
     {
         // preventing stack overflows on debug mode, by quickly sending the
         // task to the heap.
-        if cfg!(debug_assertions) && std::mem::size_of::<F>() > BOX_FUTURE_THRESHOLD {
+        if std::mem::size_of::<F>() > BOX_FUTURE_THRESHOLD {
+            panic!("Future too large: {}", std::mem::size_of::<F>());
             spawn_inner(Box::pin(future), None)
         } else {
             spawn_inner(future, None)

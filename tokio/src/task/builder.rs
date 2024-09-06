@@ -89,7 +89,8 @@ impl<'a> Builder<'a> {
         Fut::Output: Send + 'static,
     {
         Ok(
-            if cfg!(debug_assertions) && std::mem::size_of::<Fut>() > BOX_FUTURE_THRESHOLD {
+            if std::mem::size_of::<Fut>() > BOX_FUTURE_THRESHOLD {
+                panic!("Future too large: {}", std::mem::size_of::<Fut>());
                 super::spawn::spawn_inner(Box::pin(future), self.name)
             } else {
                 super::spawn::spawn_inner(future, self.name)
@@ -111,7 +112,8 @@ impl<'a> Builder<'a> {
         Fut::Output: Send + 'static,
     {
         Ok(
-            if cfg!(debug_assertions) && std::mem::size_of::<Fut>() > BOX_FUTURE_THRESHOLD {
+            if std::mem::size_of::<Fut>() > BOX_FUTURE_THRESHOLD {
+                panic!("Future too large: {}", std::mem::size_of::<Fut>());
                 handle.spawn_named(Box::pin(future), self.name)
             } else {
                 handle.spawn_named(future, self.name)
@@ -140,7 +142,8 @@ impl<'a> Builder<'a> {
         Fut::Output: 'static,
     {
         Ok(
-            if cfg!(debug_assertions) && std::mem::size_of::<Fut>() > BOX_FUTURE_THRESHOLD {
+            if std::mem::size_of::<Fut>() > BOX_FUTURE_THRESHOLD {
+                panic!("Future too large: {}", std::mem::size_of::<Fut>());
                 super::local::spawn_local_inner(Box::pin(future), self.name)
             } else {
                 super::local::spawn_local_inner(future, self.name)
@@ -207,7 +210,8 @@ impl<'a> Builder<'a> {
     {
         use crate::runtime::Mandatory;
         let (join_handle, spawn_result) =
-            if cfg!(debug_assertions) && std::mem::size_of::<Function>() > BOX_FUTURE_THRESHOLD {
+            if std::mem::size_of::<Function>() > BOX_FUTURE_THRESHOLD {
+                panic!("Future too large: {}", std::mem::size_of::<Function>());
                 handle.inner.blocking_spawner().spawn_blocking_inner(
                     Box::new(function),
                     Mandatory::NonMandatory,
